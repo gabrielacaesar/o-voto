@@ -16,7 +16,7 @@ mes <- 11
 dia <- 09
 requisicao <- fromJSON(paste0(base, ano, mes, dia), flatten=TRUE)
 
-### coletando votos de cada deputado
+### coletando dados das votacoes do dia
 all_votacao <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]] %>% select(column_infos)
 all_votacao$DescricaoVotacao
 
