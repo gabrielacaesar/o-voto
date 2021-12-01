@@ -2,32 +2,33 @@
 library(jsonlite)
 library(tidyverse)
 
+# url da API
 base <- "https://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/"
+
 ### ATENÇÃO: INFORME ABAIXO A DATA DA VOTACAO. ANO MES E DIA
-data <- "20211027"
-requisicao <- fromJSON(paste0(base, data), flatten=TRUE)
+ano <- 2021
+mes <- 11
+dia <- 09
+requisicao <- fromJSON(paste0(base, ano, mes, dia), flatten=TRUE)
 
-### criando DF com info de votacoes do dia
-data <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["DataSessao"]]
-proposicao <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["DescricaoIdentificacaoMateria"]]
-casa <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["SiglaCasa"]]
-resumo <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["DescricaoVotacao"]]
-sequencial <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["SequencialSessao"]]
-
-df_info <- data.frame(data, casa, sequencial, proposicao, resumo)
-### ATENÇÃO: rode o codigo abaixo e verifique no console se esta é a votacao que voce deseja
-df_info
+# definindo colunas para coleta abaixo
+column_votacao = c("sequencial", "CodigoParlamentar", "NomeParlamentar", "SiglaPartido", "SiglaUF", "Voto")
+column_infos = c("SequencialSessao", "DataSessao", "DescricaoIdentificacaoMateria", "DescricaoVotacao", "Resultado", "Votos.VotoParlamentar")
+column_df = c("DataSessao", "DescricaoIdentificacaoMateria", 'DescricaoVotacao', "NomeParlamentar", "SiglaPartido", "SiglaUF", "Voto")
 
 ### coletando votos de cada deputado
-i = 1
-id_politico <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["Votos"]][[i]][["CodigoParlamentar"]]
-nome_politico <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["Votos"]][[i]][["NomeParlamentar"]]
-partido <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["Votos"]][[i]][["SiglaPartido"]]
-uf <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["Votos"]][[i]][["SiglaUF"]]
-voto <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]][["Votos"]][[i]][["Voto"]]
+all_votacao <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]] %>% select(column_infos)
+all_votacao$DescricaoVotacao
 
-df_votacao <- data.frame(id_politico, nome_politico, partido, uf, voto)
-dados_finais <- info %>% bind_cols(df_votacao)
+# ESCOLHA A VOTACAO A SER COLETADA
+i <- 1 # <--- aqui indica que voce deseja a primeira votacao. altere o numero caso isso nao seja verdade.
+votacao_escolhida <- all_votacao[["Votos.VotoParlamentar"]][[i]] %>% mutate(sequencial = as.character(i)) %>% select(column_votacao)
+
+### gerando dataframe final
+dados_finais <- votacao_escolhida %>% 
+  left_join(all_votacao, by = c("sequencial" = "SequencialSessao")) %>% 
+  select(column_df) %>%
+  rename(voto = Voto, nome_politico = NomeParlamentar, partido = SiglaPartido)
 
 # corrigindo nomes de politicos, partidos e votos
 dados_finais_v2 <- dados_finais %>%
@@ -47,4 +48,4 @@ votacao_nova <- dados_finais_v2 %>% select(c(nome_politico, partido, voto))
 votacao_nova %>% count(voto)
 
 # download de arquivo final
-write.csv(votacao_nova, paste0("dados_finais_", dados_finais$data[1], "_sequencial_", dados_finais$sequencial[1], ".csv"))
+write.csv(votacao_nova, paste0("votacao_nova_sequencial_", i, ".csv"))
