@@ -2,6 +2,11 @@
 library(jsonlite)
 library(tidyverse)
 
+# definindo colunas para a coleta dos dados abaixo
+column_votacao = c("sequencial", "CodigoParlamentar", "NomeParlamentar", "SiglaPartido", "SiglaUF", "Voto")
+column_infos = c("SequencialSessao", "DataSessao", "DescricaoIdentificacaoMateria", "DescricaoVotacao", "Resultado", "Votos.VotoParlamentar")
+column_df = c("DataSessao", "DescricaoIdentificacaoMateria", 'DescricaoVotacao', "NomeParlamentar", "SiglaPartido", "SiglaUF", "Voto")
+
 # url da API
 base <- "https://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/"
 
@@ -10,11 +15,6 @@ ano <- 2021
 mes <- 11
 dia <- 09
 requisicao <- fromJSON(paste0(base, ano, mes, dia), flatten=TRUE)
-
-# definindo colunas para coleta abaixo
-column_votacao = c("sequencial", "CodigoParlamentar", "NomeParlamentar", "SiglaPartido", "SiglaUF", "Voto")
-column_infos = c("SequencialSessao", "DataSessao", "DescricaoIdentificacaoMateria", "DescricaoVotacao", "Resultado", "Votos.VotoParlamentar")
-column_df = c("DataSessao", "DescricaoIdentificacaoMateria", 'DescricaoVotacao', "NomeParlamentar", "SiglaPartido", "SiglaUF", "Voto")
 
 ### coletando votos de cada deputado
 all_votacao <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]] %>% select(column_infos)
