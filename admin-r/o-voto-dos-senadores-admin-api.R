@@ -20,7 +20,7 @@ requisicao <- fromJSON(paste0(base, ano, mes, dia), flatten=TRUE)
 all_votacao <- requisicao[["ListaVotacoes"]][["Votacoes"]][["Votacao"]] %>% select(column_infos)
 all_votacao$DescricaoVotacao
 
-# ESCOLHA A VOTACAO A SER COLETADA
+### ATENÇÃO: ESCOLHA A VOTACAO A SER COLETADA
 i <- 1 # <--- aqui indica que voce deseja a primeira votacao. altere o numero caso isso nao seja verdade.
 votacao_escolhida <- all_votacao[["Votos.VotoParlamentar"]][[i]] %>% mutate(sequencial = as.character(i)) %>% select(column_votacao)
 
