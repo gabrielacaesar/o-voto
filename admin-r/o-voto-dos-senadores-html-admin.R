@@ -57,17 +57,13 @@ votacao <- url_2 %>%
                                 id_politico %in% 163:243 ~ "V3", 
                                 TRUE ~ "Na")) %>%
   mutate(voto = case_when(voto == "Sim" ~ "Sim",
-                          voto == "Missão" ~ "Ausente",
-                          voto == "Não Compareceu" ~ "Ausente",
-                          voto == "Não registrou voto" ~ "Ausente",
-                          voto == "Licença particular" ~ "Ausente",
-                          voto == "Licença saúde" ~ "Ausente",
-                          voto == "Atividade parlamentar" ~ "Ausente",
+                          voto %in% c("Missão", "Não Compareceu", "Não registrou voto", 
+                                      "Licença particular", "Licença saúde", "Atividade parlamentar") ~ "Ausente",
                           voto == "Presidente" ~ "Não votou",
                           voto == "Não" ~ "Não",
                           voto == "Abstenção" ~ "Abstenção",
                           voto == "Obstrução" ~ "Obstrução"))
-  
+
 # cruzamento dos partidos atuais + dados dos votantes
 ###### ATENÇÃO: DEFINA ABAIXO QUAL VOTAÇÃO DO LINK VOCê DESEJA
 ###### OBS: V1 é a primeira. V2 é a segunda. ETC
