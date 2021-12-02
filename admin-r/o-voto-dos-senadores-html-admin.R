@@ -6,6 +6,7 @@ library(rvest)
 url_1 <- "https://www25.senado.leg.br/web/senadores/em-exercicio/-/e/por-nome"
 
 # URL da votação nominal
+###### ATENÇÃO: INFORME ABAIXO O LINK DA VOTAÇÃO NOMINAL
 url_2 <- "https://www25.senado.leg.br/web/atividade/materias/-/materia/150731/votacoes#votacao_6475"
 
 # coleta dos partios dos senadores em exercício
