@@ -80,4 +80,4 @@ votacao_final <- votacao %>%
 votacao_final %>% count(voto)
 
 # download do CSV padronizado para o ADMIN
-write.csv(votacao_final, paste0("votacao_final_", Sys.Date() ,".csv"), row.names = F)
+write.csv(votacao_final, paste0("votacao_final_SF_", Sys.Date() ,".csv"), row.names = F)
