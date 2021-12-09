@@ -7,7 +7,7 @@ url_1 <- "https://www25.senado.leg.br/web/senadores/em-exercicio/-/e/por-nome"
 
 # URL da votação nominal
 ###### ATENÇÃO: INFORME ABAIXO O LINK DA VOTAÇÃO NOMINAL
-url_2 <- "https://www25.senado.leg.br/web/atividade/materias/-/materia/151149/votacoes#votacao_6477"
+url_2 <- "https://www.congressonacional.leg.br/materias/medidas-provisorias/-/mpv/149367/votacoes#votacao_6476"
 
 # coleta dos partios dos senadores em exercício
 senadores <- url_1 %>%
@@ -63,8 +63,8 @@ votacao <- url_2 %>%
                           voto == "Não" ~ "Não",
                           voto == "Abstenção" ~ "Abstenção",
                           voto == "Obstrução" ~ "Obstrução")) %>%
-  mutate(nome_politico = case_when(nome_politico == "Maria Eliza" ~ "Maria Eliza de Aguiar e Silva",
-                                   TRUE ~ nome_politico))
+  mutate(nome = case_when(nome == "Maria Eliza" ~ "Maria Eliza de Aguiar e Silva",
+                                   TRUE ~ nome))
 
 # cruzamento dos partidos atuais + dados dos votantes
 ###### ATENÇÃO: DEFINA ABAIXO QUAL VOTAÇÃO DO LINK VOCê DESEJA
