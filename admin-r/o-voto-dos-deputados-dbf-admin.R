@@ -97,4 +97,4 @@ votacao_nova_admin <- dbf_file %>%
 votacao_nova_admin %>%
   count(voto)
 
-write.csv(votacao_nova_admin, "votacao_nova_admin.csv", row.names = F)
+write.csv(votacao_nova_admin, paste0("votacao_nova_admin_CD_", Sys.Date() ,".csv"), row.names = F)
