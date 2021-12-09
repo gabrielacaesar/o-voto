@@ -7,7 +7,7 @@ url_1 <- "https://www25.senado.leg.br/web/senadores/em-exercicio/-/e/por-nome"
 
 # URL da votação nominal
 ###### ATENÇÃO: INFORME ABAIXO O LINK DA VOTAÇÃO NOMINAL
-url_2 <- "https://www25.senado.leg.br/web/atividade/materias/-/materia/150731/votacoes#votacao_6475"
+url_2 <- "https://www25.senado.leg.br/web/atividade/materias/-/materia/151149/votacoes#votacao_6477"
 
 # coleta dos partios dos senadores em exercício
 senadores <- url_1 %>%
@@ -62,18 +62,22 @@ votacao <- url_2 %>%
                           voto == "Presidente" ~ "Não votou",
                           voto == "Não" ~ "Não",
                           voto == "Abstenção" ~ "Abstenção",
-                          voto == "Obstrução" ~ "Obstrução"))
+                          voto == "Obstrução" ~ "Obstrução")) %>%
+  mutate(nome_politico = case_when(nome_politico == "Maria Eliza" ~ "Maria Eliza de Aguiar e Silva",
+                                   TRUE ~ nome_politico))
 
 # cruzamento dos partidos atuais + dados dos votantes
 ###### ATENÇÃO: DEFINA ABAIXO QUAL VOTAÇÃO DO LINK VOCê DESEJA
 ###### OBS: V1 é a primeira. V2 é a segunda. ETC
 
-votacao_escolhida <- "V3"
+votacao_escolhida <- "V1"
 
 votacao_final <- votacao %>%
   left_join(senadores, by = "nome_upper") %>%
   filter(id_votacao == votacao_escolhida) %>%
   select(nome, partido, voto)
+
+votacao_final %>% count(voto)
 
 # download do CSV padronizado para o ADMIN
 write.csv(votacao_final, paste0("votacao_final_", Sys.Date() ,".csv"), row.names = F)
