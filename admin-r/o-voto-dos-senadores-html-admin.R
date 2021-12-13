@@ -7,7 +7,7 @@ url_1 <- "https://www25.senado.leg.br/web/senadores/em-exercicio/-/e/por-nome"
 
 # URL da votação nominal
 ###### ATENÇÃO: INFORME ABAIXO O LINK DA VOTAÇÃO NOMINAL
-url_2 <- "https://www.congressonacional.leg.br/materias/medidas-provisorias/-/mpv/149367/votacoes#votacao_6476"
+url_2 <- "https://www25.senado.leg.br/web/atividade/materias/-/materia/151148/votacoes#votacao_6478"
 
 # coleta dos partios dos senadores em exercício
 senadores <- url_1 %>%
@@ -18,7 +18,9 @@ senadores <- url_1 %>%
   select(nome, partido, uf)%>%
   mutate(nome_upper = toupper(abjutils::rm_accent(nome)))%>%
   mutate(partido = case_when(partido == "PODEMOS" ~ "PODE",
-                             TRUE ~ partido))
+                             TRUE ~ partido)) %>%
+  mutate(nome_upper = case_when(nome_upper == "MARIA ELIZA" ~ "MARIA ELIZA DE AGUIAR E SILVA",
+                                TRUE ~ nome_upper))
 
 # coleta dos dados da votação, como nome e voto
 votos_possiveis <- c("Não Compareceu", "Não",  "Sim ", "Abstenção", "Presidente (art.  RISF) ", "- art. , caput - Atividade parlamentar", "Abstenção")
@@ -63,8 +65,8 @@ votacao <- url_2 %>%
                           voto == "Não" ~ "Não",
                           voto == "Abstenção" ~ "Abstenção",
                           voto == "Obstrução" ~ "Obstrução")) %>%
-  mutate(nome = case_when(nome == "Maria Eliza" ~ "Maria Eliza de Aguiar e Silva",
-                                   TRUE ~ nome))
+  mutate(nome_upper = case_when(nome_upper == "MARIA ELIZA" ~ "MARIA ELIZA DE AGUIAR E SILVA",
+                          TRUE ~ nome_upper))
 
 # cruzamento dos partidos atuais + dados dos votantes
 ###### ATENÇÃO: DEFINA ABAIXO QUAL VOTAÇÃO DO LINK VOCê DESEJA
@@ -75,7 +77,7 @@ votacao_escolhida <- "V1"
 votacao_final <- votacao %>%
   left_join(senadores, by = "nome_upper") %>%
   filter(id_votacao == votacao_escolhida) %>%
-  select(nome, partido, voto)
+  select(nome_upper, partido, voto)
 
 votacao_final %>% count(voto)
 
