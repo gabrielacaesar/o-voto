@@ -33,7 +33,7 @@ dados_finais <- votacao_escolhida %>%
 # corrigindo nomes de politicos, partidos e votos
 dados_finais_v2 <- dados_finais %>%
   mutate(voto = case_when(voto == "Presidente (art. 51 RISF)" ~ "Não votou",
-                          voto %in% c("MIS", "AP") ~ "Ausente",
+                          voto %in% c("MIS", "AP", "P-NRV") ~ "Ausente",
                           TRUE ~ voto),
         nome_politico = case_when(nome_politico == "Maria Eliza" ~ "Maria Eliza de Aguiar e Silva",
                                   TRUE ~ nome_politico),
