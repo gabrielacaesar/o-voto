@@ -33,7 +33,7 @@ dados_finais <- votacao_escolhida %>%
 # corrigindo nomes de politicos, partidos e votos
 dados_finais_v2 <- dados_finais %>%
   mutate(voto = case_when(voto == "Presidente (art. 51 RISF)" ~ "Não votou",
-                          voto %in% c("MIS", "AP", "P-NRV") ~ "Ausente",
+                          voto %in% c("MIS", "AP", "P-NRV", "NCom") ~ "Ausente",
                           TRUE ~ voto),
         nome_politico = case_when(nome_politico == "Maria Eliza" ~ "Maria Eliza de Aguiar e Silva",
                                   TRUE ~ nome_politico),
@@ -42,10 +42,10 @@ dados_finais_v2 <- dados_finais %>%
                             TRUE ~ partido))
 
 # selecionando colunas para o arquivo final
-votacao_nova <- dados_finais_v2 %>% select(c(nome_politico, partido, voto))
+votacao_nova <- dados_finais_v2 %>% select(c(nome_politico, partido, voto)) %>% arrange(nome_politico)
 
 # contagem de votos para checagem final
 votacao_nova %>% count(voto)
 
 # download de arquivo final
-write.csv(votacao_nova, paste0("votacao_nova_sequencial_", i, ".csv"))
+write.csv(votacao_nova, paste0("votacao_nova_sequencial_V", i, ".csv"), row.names = F)
