@@ -12,8 +12,8 @@ base <- "https://legis.senado.leg.br/dadosabertos/plenario/lista/votacao/"
 
 ### ATENÇÃO: INFORME ABAIXO A DATA DA VOTACAO. ANO MES E DIA
 ano <- 2021
-mes <- 11
-dia <- 09
+mes <- "02"
+dia <- "09"
 requisicao <- fromJSON(paste0(base, ano, mes, dia), flatten=TRUE)
 
 ### coletando dados das votacoes do dia
